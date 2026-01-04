@@ -1,42 +1,114 @@
 import { Injectable } from '@nestjs/common';
-import { Image } from 'generated/prisma';
-import { connect } from 'http2';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UpdateCharacterData, CreateCharacterData } from './interfaces/characters.interface';
 
 @Injectable()
 export class CharactersRepository {
     constructor(private prisma: PrismaService) {}
 
+    /**
+     * Returns a character in the database.
+     * 
+     * @param id The identifier of the character
+     * @returns The operation of finding
+     */
     findById(id : string) {
         return this.prisma.character.findUnique({ where: { id } });
     }
 
+    /**
+     * Returns all characters in the database.
+     * 
+     * @returns The operation of finding
+     */
     getAll() {
         return this.prisma.character.findMany();
     }
 
-    create(data: { name : string, description : string, species : string,
-        image : Image
-    }) {
-        return this.prisma.character.create( { data: 
-            { 
-                name: data.name, 
-                description: data.description, 
-                species: data.species, 
-                image: { connect: { id: data.image.id } } 
-            } } );
+    /**
+     * Create a character.
+     * 
+     * @param data The basic information of the character
+     * @returns The operation of creation
+     */
+    create(data: CreateCharacterData) { 
+        // If there is an imageUrl, create with transaction
+        if(data.imageUrl) {
+            return this.prisma.$transaction(async (tx) => {
+                const image = await tx.image.create({
+                    data: { url: data.imageUrl! }
+                });
+
+                const character = await tx.character.create({
+                    data: {
+                        name: data.name,
+                        description: data.description,
+                        species: data.species,
+                        imageId: image.id
+                    },
+                    include: { image: true },
+                });
+
+                return character;
+            });
+        } 
+
+        // If there is no imageUrl, create normally
+        return this.prisma.character.create({ data });
     }
 
-    update(id : string, name : string, description : string, 
-        species : string, image : Image) {
-            return this.prisma.character.update({ where: { id }, data: { name, 
-                description, species, image: { connect: { id: image.id } }
-             } });
+    /**
+     * Update a character and opcionally their image.
+     *
+     * @param characterId The identifier of the character
+     * @param data The information to upload
+     * @param imageUrl New URL of the image
+     * @returns The character updated
+     */
+    update(characterId: string, data: UpdateCharacterData) {
+        // If there is an image, use transaction
+        if (data.imageUrl) { 
+            return this.prisma.$transaction(async (tx) => {
+                const image = await tx.image.create({ data: { url: data.imageUrl! } });
+                
+                return tx.character.update({
+                    where: { id: characterId },
+                    data: { ...data, imageId: image.id },
+                    include: { image: true },
+                });
+            });
+        }
+
+        // If there is no image, updates the character
+        return this.prisma.character.update({
+            where: { id: characterId },
+            data,
+            include: { image: true },
+        });
     }
+    
 
-    delete(id : string) {
-        return this.prisma.character.delete({ where: { id } });
+    
+    /**
+     * Delete a character and the image if it exists.
+     * @param id The character id
+     * @returns The operation of delete
+     */
+    delete(id: string) {
+        return this.prisma.$transaction(async (tx) => {
+            const character = await tx.character.findUnique({
+                where: { id },
+            });
+
+            if (character?.imageId) {
+                await tx.image.delete({
+                where: { id: character.imageId },
+                });
+            }
+
+            return tx.character.delete({
+                where: { id },
+            });
+        });
     }
-
-
 }
