@@ -61,7 +61,7 @@ export class CharactersService {
             throw new NotFoundException('There is not any character with the id:' + id);
         }
 
-        return await this.characterRepo.update()
+        return await this.characterRepo.update(id, data);
     }
 
     /**
