@@ -1,25 +1,45 @@
-import { IsString, IsNotEmpty, MaxLength, IsOptional } from "class-validator";
+import { IsString, IsNotEmpty, MaxLength, IsOptional } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class UpdateCharacterDto {
-    @IsOptional()
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(50)
-    name?: string;
+  @ApiPropertyOptional({ 
+    description: 'Name of the character', 
+    maxLength: 50, 
+    example: 'Charlie' 
+  })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
+  name?: string;
 
-    @IsOptional()
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(50)
-    description?: string;
+  @ApiPropertyOptional({ 
+    description: 'Short description of the character', 
+    maxLength: 50, 
+    example: 'Main smiling friend of the show' 
+  })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
+  description?: string;
 
-    @IsOptional()
-    @IsString()
-    @IsNotEmpty()
-    @MaxLength(50)
-    species?: string;
+  @ApiPropertyOptional({ 
+    description: 'Species of the character', 
+    maxLength: 50, 
+    example: 'Human' 
+  })
+  @IsOptional()
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(50)
+  species?: string;
 
-    @IsOptional()
-    @IsString()
-    imageUrl?: string;
+  @ApiPropertyOptional({ 
+    description: 'URL of the character image', 
+    example: 'https://example.com/images/charlie.png' 
+  })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 }
