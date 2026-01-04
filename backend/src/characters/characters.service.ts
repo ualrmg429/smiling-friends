@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CharactersRepository } from './characters.repository';
 import { CreateCharacterData, UpdateCharacterData } from './interfaces/characters.interface';
-import { CreateCharacterDto } from './dto/create-character.dto';
+import { Character } from 'generated/prisma';
 
 @Injectable()
 export class CharactersService {
@@ -11,10 +11,10 @@ export class CharactersService {
      * Lists all characters.
      * @returns The list of characters.
      */
-    async listAllCharacters() {
+    async listAllCharacters() : Promise<Character[]> {
         const characters = await this.characterRepo.getAll();
 
-        if(characters.length === 0) {
+        if(!characters || characters.length === 0) {
             throw new NotFoundException('There are any characters');
         }
 
@@ -27,7 +27,7 @@ export class CharactersService {
      * @param id Identifier of the character.
      * @returns The character.
      */
-    async getCharacter(id: string) {
+    async getCharacter(id: string) : Promise<Character> {
         const character = await this.characterRepo.findById(id);
         
         if(!character) {
@@ -43,7 +43,7 @@ export class CharactersService {
      * @param data The data of the character. 
      * @returns The created character.
      */
-    async createCharacter(data: CreateCharacterData) {
+    async createCharacter(data: CreateCharacterData) : Promise<Character> {
         return await this.characterRepo.create(data);
     }
 
@@ -54,7 +54,7 @@ export class CharactersService {
      * @param data The information to update
      * @returns The updated character
      */
-    async updateCharacter(id: string, data: UpdateCharacterData) {
+    async updateCharacter(id: string, data: UpdateCharacterData) : Promise<Character> {
         const character = await this.characterRepo.findById(id);
         
         if(!character) {

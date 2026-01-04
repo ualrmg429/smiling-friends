@@ -3,10 +3,11 @@ import { CharactersModule } from './characters/characters.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from './prisma/prisma.module';
 
 
 @Module({
-  imports: [CharactersModule, AuthModule, UsersModule],
+  imports: [CharactersModule, AuthModule, UsersModule, PrismaModule],
   controllers: [],
   providers: [PrismaService],
 })

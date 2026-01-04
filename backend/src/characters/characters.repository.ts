@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateCharacterData, CreateCharacterData } from './interfaces/characters.interface';
+import { Character } from '@prisma/client';
+import { Prisma__CharacterClient } from 'generated/prisma/models';
 
 @Injectable()
 export class CharactersRepository {
@@ -10,9 +12,9 @@ export class CharactersRepository {
      * Returns a character in the database.
      * 
      * @param id The identifier of the character
-     * @returns The operation of finding
+     * @returns The character with the id
      */
-    findById(id : string) {
+    findById(id : string) : Promise<Character | null> {
         return this.prisma.character.findUnique({ where: { id } });
     }
 
@@ -21,7 +23,7 @@ export class CharactersRepository {
      * 
      * @returns The operation of finding
      */
-    getAll() {
+    getAll() : Promise<Character[] | null> {
         return this.prisma.character.findMany();
     }
 
@@ -31,7 +33,7 @@ export class CharactersRepository {
      * @param data The basic information of the character
      * @returns The operation of creation
      */
-    create(data: CreateCharacterData) { 
+    create(data: CreateCharacterData) : Promise<Character> { 
         // If there is an imageUrl, create with transaction
         if(data.imageUrl) {
             return this.prisma.$transaction(async (tx) => {
@@ -65,7 +67,7 @@ export class CharactersRepository {
      * @param imageUrl New URL of the image
      * @returns The character updated
      */
-    update(characterId: string, data: UpdateCharacterData) {
+    update(characterId: string, data: UpdateCharacterData) : Promise<Character> {
         // If there is an image, use transaction
         if (data.imageUrl) { 
             return this.prisma.$transaction(async (tx) => {
