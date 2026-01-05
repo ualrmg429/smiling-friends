@@ -1,4 +1,4 @@
-export interface CreateUserData {
+export interface UserData {
     email: string,
     password: string
 }

@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
-import { CreateUserData } from './users.interface';
+import { UserData } from './users.interface';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -12,8 +12,8 @@ export class UsersService {
      * @param email The user's email
      * @returns The user with the email
      */
-    getByEmail(email: string) {
-        const user = this.usersRepo.findByEmail(email);
+    async getByEmail(email: string) {
+        const user = await this.usersRepo.findByEmail(email);
 
         if(user === null) {
             throw new NotFoundException('User whit email' + email + 'not found');
@@ -27,7 +27,7 @@ export class UsersService {
      * @param data Email and password of the user
      * @returns The created user
      */
-    async createUser(data: CreateUserData) {
+    async createUser(data: UserData) {
         const existingUser = this.usersRepo.findByEmail(data.email);
         if(existingUser !== null) {
             throw new ConflictException('User with email ' + data.email + ' already exists');
