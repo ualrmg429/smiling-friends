@@ -59,6 +59,8 @@ export class CharactersController {
   // UPDATE CHARACTER
   // -----------------------------------------
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(`ADMIN`)
   @ApiOperation({ summary: 'Update an existing character' })
   @ApiParam({ name: 'id', description: 'UUID of the character to update', example: '123e4567-e89b-12d3-a456-426614174000' })
   @ApiBody({ type: UpdateCharacterDto, description: 'Fields to update' })
@@ -75,6 +77,8 @@ export class CharactersController {
   // DELETE CHARACTER
   // -----------------------------------------
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(`ADMIN`)
   @ApiOperation({ summary: 'Delete a character' })
   @ApiParam({ name: 'id', description: 'UUID of the character to delete', example: '123e4567-e89b-12d3-a456-426614174000' })
   @ApiNoContentResponse({ description: 'Character deleted successfully' })

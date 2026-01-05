@@ -8,11 +8,11 @@ export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.get<string[]>('roles', context.getHandler());
     if (!requiredRoles) {
-      return true; // Si no hay roles definidos, dejamos pasar
+      return true; // If there is not defined roles, pass
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user; // Esto depende de tu AuthGuard (JWT o sesión)
+    const user = request.user;
     return requiredRoles.includes(user.role);
   }
 }
