@@ -29,7 +29,7 @@ export class CreateCharacterDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(50)
+  @MaxLength(250)
   species: string;
 
   @ApiProperty({

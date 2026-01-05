@@ -3,6 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateCharacterData, CreateCharacterData } from './interfaces/characters.interface';
 import { Character } from '@prisma/client';
 import { Prisma__CharacterClient } from 'generated/prisma/models';
+import { CharacterWithImage } from './dto/character-with-image.dto';
 
 @Injectable()
 export class CharactersRepository {
@@ -14,8 +15,9 @@ export class CharactersRepository {
      * @param id The identifier of the character
      * @returns The character with the id
      */
-    findById(id : string) : Promise<Character | null> {
-        return this.prisma.character.findUnique({ where: { id } });
+    findById(id : string) : Promise<CharacterWithImage | null> {
+        return this.prisma.character.findUnique({ where: { id },
+        include: { image: true } });
     }
 
     /**
@@ -23,8 +25,8 @@ export class CharactersRepository {
      * 
      * @returns The operation of finding
      */
-    getAll() : Promise<Character[] | null> {
-        return this.prisma.character.findMany();
+    getAll() : Promise<CharacterWithImage[] | null> {
+        return this.prisma.character.findMany({ include: { image: true } });
     }
 
     /**

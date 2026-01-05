@@ -10,19 +10,23 @@ export class AuthController {
 
     @Post('register')
     async register(@Body() dto: UserCredentialsDto) : Promise<UserResponseDto> {
-        const user = await this.authService.register(dto);
+        const register = await this.authService.register(dto);
         return {
-            id: user.id,
-            email: user.email
+            id: register.id,
+            email: register.email,
+            role: register.role,
+            token: register.token
         }
     }
 
     @Post('login')
     async login(@Body() dto: UserCredentialsDto) : Promise<UserResponseDto> {
-        const user = await this.authService.login(dto);
+        const login = await this.authService.login(dto);
         return {
-            id: user.id,
-            email: user.email
+            id: login.user.id,
+            email: login.user.email,
+            role: login.user.role,
+            token: login.token
         }
     }
 

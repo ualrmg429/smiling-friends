@@ -9,6 +9,8 @@ import { Character } from 'generated/prisma';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { CharacterWithImage } from './dto/character-with-image.dto';
+import { CharacterResponseDto } from './dto/character-response.dto';
 
 @ApiTags('Characters')
 @Controller('characters')
@@ -22,8 +24,9 @@ export class CharactersController {
   @ApiOperation({ summary: 'Get all characters' })
   @ApiOkResponse({ description: 'All characters returned successfully' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  getAllCharacters() : Promise<Character[] | null> {
-    return this.characterServ.listAllCharacters();
+  async getAllCharacters() : Promise<CharacterResponseDto[]> {
+    const characters = await this.characterServ.listAllCharacters();
+    return characters.map(char => this.parseToResponseDto(char));
   }
 
   // -----------------------------------------
@@ -36,8 +39,8 @@ export class CharactersController {
   @ApiNotFoundResponse({ description: 'Character not found' })
   @ApiBadRequestResponse({ description: 'Invalid UUID format' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  getCharacter(@Param('id') id: string) : Promise<Character | null> {
-    return this.characterServ.getCharacter(id);
+  async getCharacter(@Param('id') id: string) : Promise<CharacterResponseDto | null> {
+    return this.parseToResponseDto(await this.characterServ.getCharacter(id));
   }
 
   // -----------------------------------------
@@ -51,8 +54,9 @@ export class CharactersController {
   @ApiCreatedResponse({ description: 'Character created successfully', type: CreateCharacterDto })
   @ApiBadRequestResponse({ description: 'Invalid data provided' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  createCharacter(@Body() dto: CreateCharacterDto) : Promise<Character> {
-    return this.characterServ.createCharacter(dto);
+  async createCharacter(@Body() dto : CreateCharacterDto) : Promise<CharacterResponseDto> {
+    console.log('DATOS RECIBIDOS:', dto);
+    return this.parseToResponseDto(await this.characterServ.createCharacter(dto));
   }
 
   // -----------------------------------------
@@ -68,9 +72,9 @@ export class CharactersController {
   @ApiNotFoundResponse({ description: 'Character not found' })
   @ApiBadRequestResponse({ description: 'Invalid data provided' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  updateCharacter(@Param('id') id: string, @Body() dto: UpdateCharacterDto) 
-    : Promise<Character> {
-    return this.characterServ.updateCharacter(id, dto);
+  async updateCharacter(@Param('id') id: string, @Body() dto: UpdateCharacterDto) 
+    : Promise<CharacterResponseDto> {
+    return this.parseToResponseDto(await this.characterServ.updateCharacter(id, dto));
   }
 
   // -----------------------------------------
@@ -86,5 +90,15 @@ export class CharactersController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   deleteCharacter(@Param('id') id: string) {
     return this.characterServ.deleteCharacter(id);
+  }
+
+  parseToResponseDto(character: CharacterWithImage) : CharacterResponseDto {
+    return {
+      id: character.id,
+      name: character.name,
+      description: character.description,
+      species: character.species,
+      imageUrl: character.imageUrl
+    };
   }
 }

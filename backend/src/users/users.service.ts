@@ -28,8 +28,8 @@ export class UsersService {
      * @returns The created user
      */
     async createUser(data: UserData) {
-        const existingUser = this.usersRepo.findByEmail(data.email);
-        if(existingUser !== null) {
+        const existingUser = await this.usersRepo.findByEmail(data.email);
+        if(existingUser) {
             throw new ConflictException('User with email ' + data.email + ' already exists');
         }
 

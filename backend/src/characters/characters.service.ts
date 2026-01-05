@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CharactersRepository } from './characters.repository';
 import { CreateCharacterData, UpdateCharacterData } from './interfaces/characters.interface';
 import { Character } from 'generated/prisma';
+import { CharacterWithImage } from './dto/character-with-image.dto';
 
 @Injectable()
 export class CharactersService {
@@ -11,7 +12,7 @@ export class CharactersService {
      * Lists all characters.
      * @returns The list of characters.
      */
-    async listAllCharacters() : Promise<Character[]> {
+    async listAllCharacters() : Promise<CharacterWithImage[]> {
         const characters = await this.characterRepo.getAll();
 
         if(!characters || characters.length === 0) {
@@ -27,7 +28,7 @@ export class CharactersService {
      * @param id Identifier of the character.
      * @returns The character.
      */
-    async getCharacter(id: string) : Promise<Character> {
+    async getCharacter(id: string) : Promise<CharacterWithImage> {
         const character = await this.characterRepo.findById(id);
         
         if(!character) {
@@ -35,6 +36,7 @@ export class CharactersService {
         }
 
         return character;
+
     }
 
     /**
