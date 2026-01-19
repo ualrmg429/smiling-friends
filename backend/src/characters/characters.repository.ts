@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateCharacterData, CreateCharacterData } from './interfaces/characters.interface';
 import { Character } from '@prisma/client';
-import { Prisma__CharacterClient } from 'generated/prisma/models';
 import { CharacterWithImage } from './dto/character-with-image.dto';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CharactersRepository } from './characters.repository';
 import { CreateCharacterData, UpdateCharacterData } from './interfaces/characters.interface';
-import { Character } from 'generated/prisma';
+import { Character } from '@prisma/client';
 import { CharacterWithImage } from './dto/character-with-image.dto';
 
 @Injectable()

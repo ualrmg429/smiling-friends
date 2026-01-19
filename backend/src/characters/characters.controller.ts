@@ -5,7 +5,6 @@ import { CharactersService } from './characters.service';
 import { ApiBody, ApiOperation, ApiParam, ApiTags, ApiOkResponse, ApiCreatedResponse,
             ApiNoContentResponse, ApiNotFoundResponse, ApiBadRequestResponse, 
                 ApiInternalServerErrorResponse } from '@nestjs/swagger';
-import { Character } from 'generated/prisma';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
