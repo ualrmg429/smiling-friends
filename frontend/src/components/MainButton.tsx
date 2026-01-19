@@ -1,14 +1,15 @@
 import React from 'react'
 
-interface NavButtonProps {
+interface MainButtonProps {
   label: string
   onClick?: () => void // función opcional que se ejecuta al hacer clic
 }
 
-export default function NavButton({ label, onClick }: NavButtonProps) {
+export default function MainButton({ label, onClick }: MainButtonProps) {
   return (
     <button
-      className="px-4 py-1 bg-pink-500 text-white rounded-full hover:bg-yellow-600"
+      className="mt-8 inline-block bg-yellow-400 hover:bg-yellow-600 
+        text-white px-6 py-3 rounded-full border-b-1"
       onClick={onClick} // asignamos la acción
     >
       {label}
