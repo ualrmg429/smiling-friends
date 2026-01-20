@@ -7,7 +7,9 @@ interface Props {
 
 export default function CharacterCard({ character }: Props) {
   return (
-    <div className=" rounded-lg shadow-md p-4 w-72">
+    <div 
+      className="border-1 border-slate-800 rounded-lg shadow-md p-4 w-64 
+        cursor-pointer hover:bg-slate-900">
       <img 
         src={character.imageUrl || '/default-character.png'} 
         alt={character.name}
