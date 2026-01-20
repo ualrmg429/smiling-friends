@@ -18,7 +18,7 @@
   }
 
   h1, h2, h3 {
-    @apply font-display;
+    @apply font-heading;
   }
 
   h3 {
