@@ -1,12 +1,15 @@
+import type { IconType } from 'react-icons';
+
 interface Props {
     url: string;
-    img: string;
+    Icon: IconType;
+    className?: string;
 }
 
-export function SocialMediaLogo({ url, img }: Props) {
+export function SocialMediaLogo({ url, Icon, className='' }: Props) {
     return(
-    <a href={url} className='justify-center'>
-        <img className='h-6' src={img} alt="media-logo"/>
+    <a href={url} target='_blank' rel='noopener noreferrer'>
+            <Icon className={`w-6 h-6 ${className}`} />     
     </a>
     )
 }
