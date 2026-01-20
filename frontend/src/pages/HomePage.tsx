@@ -18,7 +18,7 @@ export default function HomePage() {
                 <p className="font-body">
                 Smiling Friends is an animated comedy series about a small and unconventional 
                 company whose sole mission is to make people happy. The show follows the chaotic 
-                dventures of Pim and Charlie, two very different employees who are sent out to 
+                adventures of Pim and Charlie, two very different employees who are sent out to 
                 help clients struggling with a wide variety of bizarre, emotional, and often deeply 
                 unsettling problems.
                 
@@ -33,7 +33,7 @@ export default function HomePage() {
             </section>
             <section className="py-12 px-8 max-w-4xl mx-auto">
                 <h2 className="text-3xl mb-4">Watch Smiling Friends in HBO</h2>
-                <p className="mb-4">
+                <p className="mb-8">
                     Ready to jump into the chaos? Head over to HBO 
                     and start watching Smiling Friends today. Don’t miss out on one of the most talked-about 
                     animated shows — click through, press play, and enjoy the madness.

@@ -21,7 +21,7 @@ export class CharactersController {
   // -----------------------------------------
   @Get()
   @ApiOperation({ summary: 'Get all characters' })
-  @ApiOkResponse({ description: 'All characters returned successfully' })
+  @ApiOkResponse({ description: 'All characters returned successfully', type: CharacterResponseDto, isArray: true })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async getAllCharacters() : Promise<CharacterResponseDto[]> {
     const characters = await this.characterServ.listAllCharacters();
@@ -34,7 +34,7 @@ export class CharactersController {
   @Get(':id')
   @ApiOperation({ summary: 'Get a character by ID' })
   @ApiParam({ name: 'id', description: 'UUID of the character', example: '123e4567-e89b-12d3-a456-426614174000' })
-  @ApiOkResponse({ description: 'Character retrieved successfully', type: CreateCharacterDto })
+  @ApiOkResponse({ description: 'Character retrieved successfully', type: CharacterResponseDto })
   @ApiNotFoundResponse({ description: 'Character not found' })
   @ApiBadRequestResponse({ description: 'Invalid UUID format' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
@@ -50,7 +50,7 @@ export class CharactersController {
   @Roles(`ADMIN`)
   @ApiOperation({ summary: 'Create a new character' })
   @ApiBody({ type: CreateCharacterDto, description: 'Data to create a character' })
-  @ApiCreatedResponse({ description: 'Character created successfully', type: CreateCharacterDto })
+  @ApiCreatedResponse({ description: 'Character created successfully', type: CharacterResponseDto })
   @ApiBadRequestResponse({ description: 'Invalid data provided' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async createCharacter(@Body() dto : CreateCharacterDto) : Promise<CharacterResponseDto> {
@@ -97,7 +97,7 @@ export class CharactersController {
       name: character.name,
       description: character.description,
       species: character.species,
-      imageUrl: character.imageUrl
+      imageUrl: character.image?.url
     };
   }
 }

@@ -23,9 +23,9 @@ async function bootstrap() {
     transform: true
   }));
 
-  // CORS configuration
+  // CORS CONFIGURATION
   app.enableCors({
-    origin: process.env.CORS_ORIGIN ?? 'http://localhost:5173', // URL for development
+    origin: process.env.CORS_ORIGIN ?? 'http://localhost:3000', // URL for development
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
