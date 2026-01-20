@@ -15,7 +15,6 @@ export default function CharacterCard({ character }: Props) {
       />
       <h3 className="font-heading text-xl mt-2 truncate">{character.name}</h3>
       <p className="text-gray-500 truncate">{character.species}</p>
-      <p className="font-body mt-2 line-clamp-2">{character.description}</p>
     </div>
   );
 }
