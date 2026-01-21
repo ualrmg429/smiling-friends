@@ -1,4 +1,4 @@
-import MainButton  from "../components/MainButton";
+import MainButton  from "../components/Buttons/MainButton";
 import group from "../assets/group.png";
 import { Link } from 'react-router';
 import { SiHbo } from "react-icons/si";

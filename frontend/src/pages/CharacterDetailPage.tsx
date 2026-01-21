@@ -12,7 +12,7 @@ export default function CharacterDetailPage() {
     if (!character) return <div className="p-8 text-center">Personaje no encontrado</div>;
     
     return (
-        <div className="w-full min-h-full bg-slate-950">
+        <main className="w-full min-h-full bg-slate-950">
             <div className="max-w-6xl mx-auto p-8">
                 <Link 
                     to="/characters" 
@@ -23,6 +23,6 @@ export default function CharacterDetailPage() {
                 
                 <CharacterDetails character={character} />
             </div>
-        </div>
+        </main>
     );
 };

@@ -13,7 +13,7 @@ export default function CharacterDetails({ character }: Props) {
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
             <div className="flex flex-col items-center justify-center">
                 <div className="bg-slate-900 rounded-lg p-6 w-full shadow-lg border border-slate-800">
                     <img
@@ -45,6 +45,6 @@ export default function CharacterDetails({ character }: Props) {
                     </p>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }

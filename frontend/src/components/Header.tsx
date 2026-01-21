@@ -1,4 +1,4 @@
-import NavButton from "../components/NavButton"
+import NavButton from "./Buttons/NavButton"
 import smLogo from '../assets/sf-icon.png'
 import { Link } from "react-router"
 
@@ -9,8 +9,12 @@ export default function Header() {
                 <img src={smLogo} alt="smiling-friends-presentation" className="w-30"/>
             </Link>
             <div className="flex gap-4">
-                <NavButton label="Log In" />
-                <NavButton label="Sign up" />
+                <Link to='/login'>
+                    <NavButton label="Log In" />
+                </Link>
+                <Link to='/signup'>
+                    <NavButton label="Sign up" />
+                </Link>
             </div>   
         </header>
     )

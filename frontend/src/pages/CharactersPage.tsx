@@ -9,9 +9,9 @@ export default function CharactersPage() {
     if (!data) return <div>No data available</div>;
 
     return (
-        <div className="p-8 items-center">
+        <main className="p-8 items-center">
             <h1 className="font-heading text-3xl mb-6">Characters</h1>
             <CharactersCardList characters={data} />
-        </div>
+        </main>
     );
 }
