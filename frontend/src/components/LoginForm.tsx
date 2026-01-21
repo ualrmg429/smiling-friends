@@ -26,8 +26,11 @@ export default function LoginForm() {
         const newErrors: FormErrors = {};
 
         // Validations
-        newErrors.email = validateEmail(formData.email);
-        newErrors.password = validatePassword(formData.password);
+        const emailError = validateEmail(formData.email);
+        const passwordError = validatePassword(formData.password);
+
+        if (emailError) newErrors.email = emailError;
+        if (passwordError) newErrors.password = passwordError;
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -135,7 +138,7 @@ export default function LoginForm() {
                 <div className="mt-6 text-center text-sm text-gray-400">
                     <p>
                         Don't have an account?{' '}
-                        <Link to="/signup" className="text-yellow-400 hover:text-yellow-300 font-semibold">
+                        <Link to="/signup" className="text-pink-500 hover:text-pink-600 font-semibold">
                             Sign up here               
                         </Link>
                     </p>

@@ -6,6 +6,7 @@ export const validateEmail = (email: string): string | undefined => {
     } else if (!emailRegex.test(email)) {
         return 'Please enter a valid email';
     }
+    return undefined;
 }
 
 export const validatePassword = (password: string): string | undefined => {
@@ -22,5 +23,6 @@ export const validatePassword = (password: string): string | undefined => {
     } else if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
         return 'Password must contain at least 1 symbol';
     }
+    return undefined;
 }
 

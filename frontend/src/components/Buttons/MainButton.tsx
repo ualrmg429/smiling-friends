@@ -15,8 +15,8 @@ export default function MainButton({ label, onClick, disabled, Icon, type, addit
     <button
       type={type || 'button'}
       disabled={disabled}
-      className={`inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-600 
-      text-white px-6 py-3 rounded-full border-b-1 ${additionalClasses || ''}`}
+      className={`${additionalClasses || ''} inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-600 
+      text-white px-6 py-3 rounded-full border-b-1 `}
       onClick={onClick}
     >
       {label}
