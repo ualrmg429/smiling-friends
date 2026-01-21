@@ -2,7 +2,8 @@
 import { useState } from 'react';
 import MainButton from './Buttons/MainButton';
 import { validateEmail, validatePassword } from '../utils/validationFunctions';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { useSignUp } from '../hooks/useAuth';
 
 interface FormData {
     email: string;
@@ -17,6 +18,8 @@ interface FormErrors {
 }
 
 export default function SignupForm() {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState<FormData>({
         email: '',
         password: '',
@@ -25,6 +28,7 @@ export default function SignupForm() {
 
     const [errors, setErrors] = useState<FormErrors>({});
     const [isLoading, setIsLoading] = useState(false);
+    const signUp = useSignUp();
 
     const validateForm = (): boolean => {
         const newErrors: FormErrors = {};
@@ -69,17 +73,22 @@ export default function SignupForm() {
             return;
         }
 
-        setIsLoading(true);
-        try {
-            // TODO: Replace with actual API call
-            console.log('Signup attempt with:', { email: formData.email, password: formData.password });
-            // const response = await signupUser({ email: formData.email, password: formData.password });
-        } catch (error) {
-            console.error('Signup error:', error);
-            setErrors({ email: 'Signup failed. Please try again.' });
-        } finally {
-            setIsLoading(false);
-        }
+        signUp.mutate(
+            { 
+                email: formData.email, 
+                password: formData.password 
+            },
+            {
+                onSuccess: () => {
+                    navigate('/');
+                },
+                onError: (error: any) => {
+                    setErrors({ 
+                        email: error?.response?.data?.message || 'Signup failed. Please try again.' 
+                    });
+                }
+            }
+        );
     };
 
     return (

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import MainButton from './Buttons/MainButton';
 import { validateEmail, validatePassword } from '../utils/validationFunctions';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
+import { useLogin } from '../hooks/useAuth';
 
 interface FormData {
     email: string;
@@ -14,6 +15,8 @@ interface FormErrors {
 }
 
 export default function LoginForm() {
+    const login = useLogin();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState<FormData>({
         email: '',
         password: ''
@@ -58,17 +61,22 @@ export default function LoginForm() {
             return;
         }
 
-        setIsLoading(true);
-        try {
-            // TODO: Replace with actual API call
-            console.log('Login attempt with:', formData);
-            // const response = await loginUser(formData);
-        } catch (error) {
-            console.error('Login error:', error);
-            setErrors({ email: 'Login failed. Please try again.' });
-        } finally {
-            setIsLoading(false);
-        }
+        login.mutate(
+            { 
+                email: formData.email, 
+                password: formData.password 
+            },
+            {
+                onSuccess: () => {
+                    navigate('/');
+                },
+                onError: (error: any) => {
+                    setErrors({ 
+                        email: error?.response?.data?.message || 'Login failed. Please try again.' 
+                    });
+                }
+            }
+        );
     };
 
     return (

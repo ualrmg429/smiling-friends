@@ -1,34 +1,33 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { userService } from '../api/services/auth.service';
 import type { User, UserCredentials } from '../types/user';
+import { useNavigate } from 'react-router';
 
 export const useSignUp = () => {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     return useMutation({
         mutationFn: (credentials: UserCredentials) => userService.signUp(credentials),
-        onSuccess: (data: User) => {
+        onSuccess: (data) => {
             localStorage.setItem('token', data.token);
             queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+            navigate('/'); // Redirigir después del registro
         },
-        onError: (error) => {
-            console.error('Error en registro:', error);
-        }
     });
 };
 
 export const useLogin = () => {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     return useMutation({
         mutationFn: (credentials: UserCredentials) => userService.login(credentials),
-        onSuccess: (data: User) => {
+        onSuccess: (data) => {
             localStorage.setItem('token', data.token);
             queryClient.invalidateQueries({ queryKey: ['currentUser'] });
+            navigate('/'); // Redirigir después del login
         },
-        onError: (error) => {
-            console.error('Error en login:', error);
-        }
     });
 };
 
