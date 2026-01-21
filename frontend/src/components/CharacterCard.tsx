@@ -1,11 +1,11 @@
 import type { Character } from '../types/character';
 import { Link } from 'react-router';
 import { useState } from 'react';
+import { createSlug } from '../utils/createSlug';
 
 interface Props {
     character: Character;
 }
-
 
 export default function CharacterCard({ character }: Props) {
   const [imageSrc, setImageSrc] = useState(character.imageUrl || '/default-character.png');
@@ -15,7 +15,7 @@ export default function CharacterCard({ character }: Props) {
   };
 
   return (
-    <Link to={`/${character.name}`}>
+    <Link to={`/characters/${character.id}/${createSlug(character.name)}`}>
       <div 
         className="border-1 border-slate-800 rounded-lg shadow-md p-4 w-64 
           cursor-pointer hover:bg-slate-900">

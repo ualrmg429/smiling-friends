@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router';
 import HomePage from './pages/HomePage';
 import CharactersPage from './pages/CharactersPage.tsx';
 import Layout from './layouts/Layout.tsx';
+import CharacterDetailPage from './pages/CharacterDetailPage.tsx';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Route element={<Layout />}>
       <Route path="/" element={<HomePage />} />
       <Route path="/characters" element={<CharactersPage />} />
+      <Route path="/characters/:id/:name?" element={<CharacterDetailPage />} />
       </Route>
     </Routes>
   );

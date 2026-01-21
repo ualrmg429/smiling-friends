@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { characterService } from '../api/services/characters.service'
 
 export const useCharacters = () => {
@@ -7,3 +7,12 @@ export const useCharacters = () => {
     queryFn: () => characterService.getAll(),
   });
 };
+
+export const useCharacter = (id: string) => {
+  return useQuery({
+    queryKey: ['character', id],
+    queryFn: () => characterService.getById(id),
+    enabled: !!id, 
+  });
+};
+
