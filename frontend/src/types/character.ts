@@ -4,4 +4,5 @@ export interface Character {
     description: string;
     species: string;
     imageUrl?: string;
+    imageFile?: File;
 }
