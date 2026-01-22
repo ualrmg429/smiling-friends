@@ -3,7 +3,7 @@ import { useState } from 'react';
 import MainButton from './Buttons/MainButton';
 import { validateEmail, validatePassword } from '../utils/validationFunctions';
 import { Link, useNavigate } from 'react-router';
-import { useSignUp } from '../hooks/useAuth';
+import { useSignUp } from '../hooks/useAuthQuery';
 
 interface FormData {
     email: string;
@@ -27,7 +27,7 @@ export default function SignupForm() {
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading] = useState(false);
     const signUp = useSignUp();
 
     const validateForm = (): boolean => {

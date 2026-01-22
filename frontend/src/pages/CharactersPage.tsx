@@ -1,12 +1,14 @@
 import CharactersCardList from "../components/CharactersCardList";
 import { useCharacters } from "../hooks/useCharacters";
 
-
 export default function CharactersPage() {
     const { data, isLoading, error } = useCharacters(); 
+    
     if (isLoading) return <div>Wait</div>;
     if (error) return <div>Error loading characters</div>;
     if (!data) return <div>No data available</div>;
+
+    
 
     return (
         <main className="p-8 items-center">

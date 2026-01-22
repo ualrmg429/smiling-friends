@@ -16,7 +16,7 @@ export class UsersService {
         const user = await this.usersRepo.findByEmail(email);
 
         if(user === null) {
-            throw new NotFoundException('User whit email' + email + 'not found');
+            throw new NotFoundException('User with email' + email + 'not found');
         }
 
         return user;

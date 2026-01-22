@@ -5,6 +5,8 @@ import { useAuth } from "../context/AuthContext"
 
 export default function Header() {
     const { isAuthenticated, user, logout, isLoading } = useAuth();
+    
+
     return (
         <header className="bg-slate-950 px-20 py-5 flex justify-between items-center text-gray-200 border-b-1 border-slate-600 ">
             <Link to='/'>
@@ -14,7 +16,10 @@ export default function Header() {
                 { isLoading ? (
                     <div>Loading...</div>
                 ) : isAuthenticated ? (
-                    <NavButton label="Log Out" />
+                    <div className='flex gap-4'>
+                        <p>{user?.email}</p> 
+                        <NavButton label="Log Out" onClick={logout}/>
+                    </div>
                 ) : (
                     <>
                     <Link to='/login'>

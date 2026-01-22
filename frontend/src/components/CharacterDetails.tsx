@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import type { Character } from '../types/character';
+import SecondaryButton from './Buttons/SecondaryButton';
+import { FaEdit } from "react-icons/fa";
 
 interface Props {
+    isAdmin?: boolean;
     character: Character;
 }
 
-export default function CharacterDetails({ character }: Props) {
+export default function CharacterDetails({ isAdmin = false, character }: Props) {
     const [imageSrc, setImageSrc] = useState(character.imageUrl || '/default-character.png');
     
     const handleImageError = () => {
@@ -44,6 +47,15 @@ export default function CharacterDetails({ character }: Props) {
                         {character.description}
                     </p>
                 </div>
+
+                { isAdmin ? (
+                    <SecondaryButton 
+                        label='Edit'
+                        Icon={FaEdit}
+                    />
+                ) : null }
+                
+                
             </div>
         </section>
     );

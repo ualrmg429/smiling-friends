@@ -2,7 +2,7 @@ import { useState } from 'react';
 import MainButton from './Buttons/MainButton';
 import { validateEmail, validatePassword } from '../utils/validationFunctions';
 import { Link, useNavigate } from 'react-router';
-import { useLogin } from '../hooks/useAuth';
+import { useLogin } from '../hooks/useAuthQuery';
 
 interface FormData {
     email: string;
@@ -23,7 +23,7 @@ export default function LoginForm() {
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading] = useState(false);
 
     const validateForm = (): boolean => {
         const newErrors: FormErrors = {};

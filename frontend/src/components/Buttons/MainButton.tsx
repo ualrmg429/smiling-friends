@@ -1,4 +1,3 @@
-import React from 'react'
 import type { IconType } from 'react-icons';
 
 interface MainButtonProps {
@@ -15,8 +14,8 @@ export default function MainButton({ label, onClick, disabled, Icon, type, addit
     <button
       type={type || 'button'}
       disabled={disabled}
-      className={`${additionalClasses || ''} inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-600 
-      text-white px-6 py-3 rounded-full border-b-1 `}
+      className={`${additionalClasses || ''} cursor-pointer inline-flex items-center gap-2 bg-yellow-400 hover:bg-yellow-600 
+      text-white px-6 py-3 rounded-full `}
       onClick={onClick}
     >
       {label}

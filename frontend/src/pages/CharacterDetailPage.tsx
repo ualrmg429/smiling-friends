@@ -1,11 +1,14 @@
 import { Link, useParams } from "react-router";
 import CharacterDetails from "../components/CharacterDetails";
 import { useCharacter } from "../hooks/useCharacters";
+import { useAuth } from "../context/AuthContext";
 
 export default function CharacterDetailPage() {
     
     const { id } = useParams<{ id: string }>();
     const { data: character, isLoading, error } = useCharacter(id!);
+    const { user } = useAuth();
+    const isAdmin = (user?.role === "ADMIN");
 
     if (isLoading) return <div className="p-8 text-center">Cargando personaje...</div>;
     if (error) return <div className="p-8 text-center text-red-500">Error: {error.message}</div>;
@@ -21,7 +24,7 @@ export default function CharacterDetailPage() {
                     ← Return to list
                 </Link>
                 
-                <CharacterDetails character={character} />
+                <CharacterDetails isAdmin={isAdmin} character={character} />
             </div>
         </main>
     );

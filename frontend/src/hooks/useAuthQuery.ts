@@ -3,6 +3,18 @@ import { userService } from '../api/services/auth.service';
 import type { User, UserCredentials } from '../types/user';
 import { useNavigate } from 'react-router';
 
+export const useAuthQuery = () => {
+    return useQuery({
+        queryKey: ['currentUser'],
+        queryFn: () => userService.getCurrentUser(),
+        enabled: !!localStorage.getItem('token'),
+        retry: false,
+        staleTime: 5 * 60 * 1000, 
+        refetchOnMount: true, 
+        refetchOnWindowFocus: false,
+    });
+};
+
 export const useSignUp = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -11,8 +23,8 @@ export const useSignUp = () => {
         mutationFn: (credentials: UserCredentials) => userService.signUp(credentials),
         onSuccess: (data) => {
             localStorage.setItem('token', data.token);
-            queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-            navigate('/'); // Redirigir después del registro
+            queryClient.setQueryData(['currentUser'], data);
+            navigate('/'); 
         },
     });
 };
@@ -25,8 +37,8 @@ export const useLogin = () => {
         mutationFn: (credentials: UserCredentials) => userService.login(credentials),
         onSuccess: (data) => {
             localStorage.setItem('token', data.token);
-            queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-            navigate('/'); // Redirigir después del login
+            queryClient.setQueryData(['currentUser'], data);
+            navigate('/'); 
         },
     });
 };
