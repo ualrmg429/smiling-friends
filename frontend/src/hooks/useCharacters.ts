@@ -52,3 +52,20 @@ export const useCreateCharacter = () => {
     },
   });
 };
+
+export const useDeleteCharacter = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id }: { id: string }) =>
+      characterService.delete(id),
+
+    onSuccess: (_data, { id }) => {
+      // Remove the specific character from cache
+      queryClient.removeQueries({ queryKey: ['character', id] });
+
+      // Invalidate the characters list
+      queryClient.invalidateQueries({ queryKey: ['characters'] });
+    },
+  });
+};

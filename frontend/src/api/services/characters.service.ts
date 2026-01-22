@@ -46,4 +46,8 @@ export const characterService = {
         
         return data;
     },
+
+    delete: async (id: string) => {
+        await apiClient.delete(`/characters/${id}`);
+    }
 }

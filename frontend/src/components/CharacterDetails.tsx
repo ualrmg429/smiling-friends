@@ -4,7 +4,9 @@ import SecondaryButton from './Buttons/SecondaryButton';
 import DeleteButton from './Buttons/DeleteButton';
 import { FaEdit, FaSave } from 'react-icons/fa';
 import { MdDeleteForever, MdCancel } from 'react-icons/md';
-import { useEditCharacter } from '../hooks/useCharacters';
+import { useDeleteCharacter, useEditCharacter } from '../hooks/useCharacters';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
+import { useNavigate } from 'react-router';
 
 interface Props {
   isAdmin?: boolean;
@@ -12,12 +14,15 @@ interface Props {
 }
 
 export default function CharacterDetails({ isAdmin = false, character }: Props) {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [formData, setFormData] = useState<Character>({ ...character, imageFile: undefined });
   const [imageSrc, setImageSrc] = useState(character.imageUrl || '/default-character.png');
   const [error, setError] = useState<string | null>(null);
 
   const editCharacter = useEditCharacter();
+  const deleteCharacter = useDeleteCharacter();
 
   const handleImageError = () => setImageSrc('/default-character.png');
 
@@ -39,7 +44,7 @@ export default function CharacterDetails({ isAdmin = false, character }: Props) 
       });
     } catch (err: any) {
       setError(err.message || 'Failed to update character');
-      setIsEditing(true); // volver a editar si falla
+      setIsEditing(true); 
     }
   };
 
@@ -50,7 +55,19 @@ export default function CharacterDetails({ isAdmin = false, character }: Props) 
     setError(null);
   };
 
+  const handleDelete = async () => {
+    setError(null);
+    try {
+      await deleteCharacter.mutateAsync({ id: character.id });
+      navigate('/characters')
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete character');
+      setIsDeleteModalOpen(false);
+    }
+  };
+
   return (
+    <>
     <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
       {/* Image */}
       <div className="flex flex-col items-center justify-center">
@@ -159,9 +176,7 @@ export default function CharacterDetails({ isAdmin = false, character }: Props) 
                   label="Delete"
                   Icon={MdDeleteForever}
                   additionalClasses="min-w-40"
-                  onClick={() => {
-                    // TODO: Call API
-                  }}
+                  onClick={() => { setIsDeleteModalOpen(true)}}
                 />
               </>
             )}
@@ -169,5 +184,13 @@ export default function CharacterDetails({ isAdmin = false, character }: Props) 
         )}
       </div>
     </section>
+    <ConfirmDeleteModal
+        characterName={character.name}
+        isOpen={isDeleteModalOpen}
+        isDeleting={deleteCharacter.isPending}
+        onConfirm={handleDelete}
+        onCancel={() => setIsDeleteModalOpen(false)}
+      />
+    </>
   );
 }
