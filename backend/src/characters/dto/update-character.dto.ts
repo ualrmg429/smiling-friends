@@ -20,7 +20,7 @@ export class UpdateCharacterDto {
   })
   @IsOptional()
   @IsString()
-  @MaxLength(250)
+  @MaxLength(1000)
   description?: string;
 
   @ApiPropertyOptional({ 

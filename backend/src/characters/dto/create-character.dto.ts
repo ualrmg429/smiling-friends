@@ -14,7 +14,7 @@ export class CreateCharacterDto {
 
   @ApiProperty({
     description: "Short description of the character",
-    maxLength: 250,
+    maxLength: 1000,
     example: 'One of the main smiling friends of the show',
   })
   @IsString()

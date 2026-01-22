@@ -30,9 +30,7 @@ export const useEditCharacter = () => {
         updatedCharacter
       );
 
-      queryClient.invalidateQueries({
-        queryKey: ['characters'],
-      });
+      queryClient.invalidateQueries({ queryKey: ['characters'] });
     },
   });
 };

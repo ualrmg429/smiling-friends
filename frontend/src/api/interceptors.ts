@@ -5,9 +5,18 @@ import apiClient from './axios.config';
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem('token');
+    
+    console.log('Token:', token); // ← Añade esto
+    console.log('Es FormData:', config.data instanceof FormData); // ← Y esto
+    
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    if (!(config.data instanceof FormData)) {
+      config.headers['Content-Type'] = 'application/json';
+    }
+    
     return config;
   },
   (error: AxiosError) => {

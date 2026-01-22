@@ -1,4 +1,4 @@
-import apiClient from "../axios.config";
+import apiClient from "../interceptors";
 import type { User, UserCredentials } from "../../types/user";
 
 export const userService = {

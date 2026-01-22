@@ -69,15 +69,20 @@ export class CharactersRepository {
      * @param imageUrl New URL of the image
      * @returns The character updated
      */
-    update(characterId: string, data: UpdateCharacterData) : Promise<Character> {
+    update(characterId: string, data: UpdateCharacterData): Promise<Character> {
+        const { imageUrl, ...characterData } = data;
+
         // If there is an image, use transaction
-        if (data.imageUrl) { 
+        if (imageUrl) { 
             return this.prisma.$transaction(async (tx) => {
-                const image = await tx.image.create({ data: { url: data.imageUrl! } });
+                const image = await tx.image.create({ data: { url: imageUrl } });
                 
                 return tx.character.update({
                     where: { id: characterId },
-                    data: { ...data, imageId: image.id },
+                    data: { 
+                        ...characterData,  // ← Solo los campos válidos
+                        imageId: image.id 
+                    },
                     include: { image: true },
                 });
             });
@@ -86,7 +91,7 @@ export class CharactersRepository {
         // If there is no image, updates the character
         return this.prisma.character.update({
             where: { id: characterId },
-            data,
+            data: characterData,  // ← Sin imageUrl
             include: { image: true },
         });
     }

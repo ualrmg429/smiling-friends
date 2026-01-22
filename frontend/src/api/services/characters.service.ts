@@ -1,4 +1,4 @@
-import apiClient from "../axios.config";
+import apiClient from "../interceptors";
 import type { Character, CharacterEdit } from "../../types/character";
 
 export const characterService = {
@@ -13,7 +13,21 @@ export const characterService = {
     },
 
     edit: async (id: string, fields: CharacterEdit): Promise<Character> => {
-        const { data } = await apiClient.patch<Character>(`/characters/${id}`, fields);
+        const formData = new FormData();
+
+        if (fields.name) formData.append('name', fields.name);
+        if (fields.description) formData.append('description', fields.description);
+        if (fields.species) formData.append('species', fields.species);
+        if (fields.imageFile) formData.append('image', fields.imageFile);
+
+        console.log('FormData creado:', formData instanceof FormData); // ← Añade esto
+        console.log('Contenido:', [...formData.entries()]); // ← Y esto para ver qué tiene
+
+        const { data } = await apiClient.patch<Character>(
+            `/characters/${id}`,
+            formData  // ← Asegúrate de que NO tenga headers aquí
+        );
+        
         return data;
-    },
+    }
 }
