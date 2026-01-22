@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { Character } from '../types/character';
 import SecondaryButton from './Buttons/SecondaryButton';
 import { FaEdit } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import DeleteButton from './Buttons/DeleteButton';
 
 interface Props {
     isAdmin?: boolean;
@@ -49,10 +51,18 @@ export default function CharacterDetails({ isAdmin = false, character }: Props) 
                 </div>
 
                 { isAdmin ? (
-                    <SecondaryButton 
-                        label='Edit'
-                        Icon={FaEdit}
-                    />
+                    <div className="flex justify-center gap-15">
+                        <SecondaryButton 
+                            label='Edit'
+                            Icon={FaEdit}
+                            additionalClasses='min-w-40'
+                        />
+                        <DeleteButton
+                            label='Delete'
+                            Icon={MdDeleteForever}
+                            additionalClasses='min-w-40'
+                        />
+                    </div>
                 ) : null }
                 
                 
