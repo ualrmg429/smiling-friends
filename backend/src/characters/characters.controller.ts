@@ -45,22 +45,33 @@ export class CharactersController {
     return this.parseToResponseDto(await this.characterServ.getCharacter(id));
   }
 
-  // -----------------------------------------
-  // CREATE CHARACTER
-  // -----------------------------------------
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(`ADMIN`)
   @UseInterceptors(ImageUploadInterceptor)
   @ApiOperation({ summary: 'Create a new character' })
-  @ApiBody({ type: CreateCharacterDto, description: 'Data to create a character' })
   @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    description: 'Data to create a character',
+    schema: {
+      type: 'object',
+      required: ['name', 'description', 'species'],
+      properties: {
+        name: { type: 'string', example: 'Pim Pimling' },
+        description: { type: 'string', example: 'An eternally optimistic pink critter' },
+        species: { type: 'string', example: 'Critter' },
+        image: { type: 'string', format: 'binary', description: 'Character image file' },
+      },
+    },
+  })
   @ApiCreatedResponse({ description: 'Character created successfully', type: CharacterResponseDto })
   @ApiBadRequestResponse({ description: 'Invalid data provided' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  async createCharacter(@Body() dto : CreateCharacterDto) : Promise<CharacterResponseDto> {
-    console.log('DATOS RECIBIDOS:', dto);
-    return this.parseToResponseDto(await this.characterServ.createCharacter(dto));
+  async createCharacter(
+    @Body() dto: CreateCharacterDto,
+    @UploadedFile() image?: Multer.File,
+  ): Promise<CharacterResponseDto> {
+    return this.parseToResponseDto(await this.characterServ.createCharacter(dto, image));
   }
 
   // -----------------------------------------
@@ -72,17 +83,28 @@ export class CharactersController {
   @UseInterceptors(ImageUploadInterceptor)
   @ApiOperation({ summary: 'Update an existing character' })
   @ApiParam({ name: 'id', description: 'UUID of the character to update', example: '123e4567-e89b-12d3-a456-426614174000' })
-  @ApiBody({ type: UpdateCharacterDto, description: 'Fields to update' })
   @ApiConsumes('multipart/form-data')
-  @ApiOkResponse({ description: 'Character updated successfully', type: UpdateCharacterDto })
+  @ApiBody({
+    description: 'Fields to update',
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', example: 'Pim Pimling' },
+        description: { type: 'string', example: 'An eternally optimistic pink critter' },
+        species: { type: 'string', example: 'Critter' },
+        image: { type: 'string', format: 'binary', description: 'New character image file' },
+      },
+    },
+  })
+  @ApiOkResponse({ description: 'Character updated successfully', type: CharacterResponseDto })
   @ApiNotFoundResponse({ description: 'Character not found' })
   @ApiBadRequestResponse({ description: 'Invalid data provided' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async updateCharacter(
-      @Param('id') id: string, 
-      @Body() dto: UpdateCharacterDto, 
-      @UploadedFile() image?: Multer.File,) 
-    : Promise<CharacterResponseDto> {
+    @Param('id') id: string,
+    @Body() dto: UpdateCharacterDto,
+    @UploadedFile() image?: Multer.File,
+  ): Promise<CharacterResponseDto> {
     return this.parseToResponseDto(await this.characterServ.updateCharacter(id, dto, image));
   }
 

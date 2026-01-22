@@ -1,5 +1,5 @@
 import apiClient from "../interceptors";
-import type { Character, CharacterEdit } from "../../types/character";
+import type { Character, CharacterCreate, CharacterEdit } from "../../types/character";
 
 export const characterService = {
     getAll: async (): Promise<Character[]> => {
@@ -29,5 +29,21 @@ export const characterService = {
         );
         
         return data;
-    }
+    },
+    
+    create: async (fields: CharacterCreate): Promise<Character> => {
+        const formData = new FormData();
+
+        formData.append('name', fields.name);
+        formData.append('description', fields.description);
+        formData.append('species', fields.species);
+        if (fields.imageFile) formData.append('image', fields.imageFile);
+
+        const { data } = await apiClient.post<Character>(
+            '/characters',
+            formData
+        );
+        
+        return data;
+    },
 }

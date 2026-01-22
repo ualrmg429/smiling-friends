@@ -19,7 +19,7 @@ export class CreateCharacterDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(250)
+  @MaxLength(1000)
   description: string;
 
   @ApiProperty({

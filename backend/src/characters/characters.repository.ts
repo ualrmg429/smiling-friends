@@ -35,30 +35,31 @@ export class CharactersRepository {
      * @param data The basic information of the character
      * @returns The operation of creation
      */
-    create(data: CreateCharacterData) : Promise<Character> { 
+    create(data: CreateCharacterData): Promise<Character> { 
+        const { imageUrl, ...characterData } = data;
+
         // If there is an imageUrl, create with transaction
-        if(data.imageUrl) {
+        if (imageUrl) {
             return this.prisma.$transaction(async (tx) => {
                 const image = await tx.image.create({
-                    data: { url: data.imageUrl! }
+                    data: { url: imageUrl }
                 });
 
-                const character = await tx.character.create({
+                return tx.character.create({
                     data: {
-                        name: data.name,
-                        description: data.description,
-                        species: data.species,
+                        ...characterData,
                         imageId: image.id
                     },
                     include: { image: true },
                 });
-
-                return character;
             });
         } 
 
         // If there is no imageUrl, create normally
-        return this.prisma.character.create({ data });
+        return this.prisma.character.create({ 
+            data: characterData,
+            include: { image: true },
+        });
     }
 
     /**
@@ -80,7 +81,7 @@ export class CharactersRepository {
                 return tx.character.update({
                     where: { id: characterId },
                     data: { 
-                        ...characterData,  // ← Solo los campos válidos
+                        ...characterData,  
                         imageId: image.id 
                     },
                     include: { image: true },

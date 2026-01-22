@@ -14,3 +14,10 @@ export interface CharacterEdit {
     species?: string;
     imageFile?: File;
 }
+
+export interface CharacterCreate {
+    name: string;
+    description: string;
+    species: string;
+    imageFile?: File;
+}

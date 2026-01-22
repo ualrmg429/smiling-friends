@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { characterService } from '../api/services/characters.service'
-import type { CharacterEdit } from '../types/character';
+import type { CharacterCreate, CharacterEdit } from '../types/character';
 
 export const useCharacters = () => {
   return useQuery({
@@ -35,3 +35,20 @@ export const useEditCharacter = () => {
   });
 };
 
+export const useCreateCharacter = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (fields: CharacterCreate) =>
+      characterService.create(fields),
+
+    onSuccess: (newCharacter) => {
+      queryClient.setQueryData(
+        ['character', newCharacter.id],
+        newCharacter
+      );
+
+      queryClient.invalidateQueries({ queryKey: ['characters'] });
+    },
+  });
+};
