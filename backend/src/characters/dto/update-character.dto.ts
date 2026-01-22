@@ -20,7 +20,6 @@ export class UpdateCharacterDto {
   })
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   @MaxLength(250)
   description?: string;
 
@@ -34,12 +33,4 @@ export class UpdateCharacterDto {
   @IsNotEmpty()
   @MaxLength(50)
   species?: string;
-
-  @ApiPropertyOptional({ 
-    description: 'URL of the character image', 
-    example: 'https://example.com/images/charlie.png' 
-  })
-  @IsOptional()
-  @IsString()
-  imageUrl?: string;
 }

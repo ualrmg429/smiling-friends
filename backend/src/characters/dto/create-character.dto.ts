@@ -31,13 +31,4 @@ export class CreateCharacterDto {
   @IsNotEmpty()
   @MaxLength(250)
   species: string;
-
-  @ApiProperty({
-    description: "URL of the character's profile image (optional)",
-    example: 'https://example.com/images/charlie.png',
-    required: false,
-  })
-  @IsOptional()
-  @IsString()
-  imageUrl?: string;
 }

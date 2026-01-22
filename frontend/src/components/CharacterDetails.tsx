@@ -6,6 +6,7 @@ import { MdDeleteForever } from "react-icons/md";
 import { MdCancel } from "react-icons/md";
 import DeleteButton from './Buttons/DeleteButton';
 import { FaSave } from "react-icons/fa";
+import { useEditCharacter } from '../hooks/useCharacters';
 
 interface Props {
     isAdmin?: boolean;
@@ -16,23 +17,29 @@ export default function CharacterDetails({ isAdmin = false, character }: Props) 
     const [isEditing, setIsEditing ] = useState(false); // Enable to edit character
     const [formData, setFormData] = useState<Character>(character);
     const [imageSrc, setImageSrc] = useState(character.imageUrl || '/default-character.png');
+    const editCharacter = useEditCharacter();
     
     const handleImageError = () => {
         setImageSrc('/default-character.png');
+    };
+
+    const handleSave = () => {
+        editCharacter.mutate({
+            id: character.id,
+            fields: formData,
+        });
     };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Preview local
         const imageUrl = URL.createObjectURL(file);
         setImageSrc(imageUrl);
 
-        // Guardas el archivo en el estado (para backend futuro)
         setFormData({
             ...formData,
-            imageFile: file // ⬅️ lo añadiremos al tipo
+            imageFile: file 
         });
     };
 
@@ -125,7 +132,7 @@ export default function CharacterDetails({ isAdmin = false, character }: Props) 
                                     additionalClasses="min-w-40 bg-orange-400! hover:bg-orange-500!"
                                     onClick={() => {
                                         setIsEditing(false);
-                                        // TODO: Call API
+                                        handleSave();
                                     }}
                                 />
                             </>

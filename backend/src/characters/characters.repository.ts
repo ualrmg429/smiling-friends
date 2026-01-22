@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UpdateCharacterData, CreateCharacterData } from './interfaces/characters.interface';
 import { Character } from '@prisma/client';
 import { CharacterWithImage } from './dto/character-with-image.dto';
+import type { Multer } from 'multer';
 
 @Injectable()
 export class CharactersRepository {

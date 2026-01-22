@@ -3,10 +3,12 @@ import { CharactersRepository } from './characters.repository';
 import { CreateCharacterData, UpdateCharacterData } from './interfaces/characters.interface';
 import { Character } from '@prisma/client';
 import { CharacterWithImage } from './dto/character-with-image.dto';
+import type { Multer } from 'multer';
+import { StorageService } from 'src/storage/storage.service';
 
 @Injectable()
 export class CharactersService {
-    constructor(private characterRepo: CharactersRepository) {}
+    constructor(private characterRepo: CharactersRepository, private storageServ: StorageService) {}
 
     /**
      * Lists all characters.
@@ -45,7 +47,12 @@ export class CharactersService {
      * @param data The data of the character. 
      * @returns The created character.
      */
-    async createCharacter(data: CreateCharacterData) : Promise<Character> {
+    async createCharacter(data: CreateCharacterData, image?: Multer.File) : Promise<Character> {
+        if (image) {
+            const imageUrl = await this.storageServ.uploadImage(image);
+            data.imageUrl = imageUrl;
+        }
+        
         return await this.characterRepo.create(data);
     }
 
@@ -56,11 +63,16 @@ export class CharactersService {
      * @param data The information to update
      * @returns The updated character
      */
-    async updateCharacter(id: string, data: UpdateCharacterData) : Promise<Character> {
+    async updateCharacter(id: string, data: UpdateCharacterData, image?: Multer.File) : Promise<Character> {
         const character = await this.characterRepo.findById(id);
         
         if(!character) {
             throw new NotFoundException('There is not any character with the id:' + id);
+        }
+
+        if (image) {
+            const imageUrl = await this.storageServ.uploadImage(image);
+            data.imageUrl = imageUrl;
         }
 
         return await this.characterRepo.update(id, data);
