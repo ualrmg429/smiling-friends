@@ -18,6 +18,16 @@ export class UsersService {
     }
 
     /**
+     * Get a user by id
+     * @param id The user's id
+     * @returns The user with the id
+     */
+    async getById(id: string) {
+        const user = await this.usersRepo.findById(id);
+        return user; 
+    }
+
+    /**
      * Create a user, checking if email is unique and hashing password
      * @param data Email and password of the user
      * @returns The created user
@@ -31,4 +41,28 @@ export class UsersService {
         const hashedPassword = await bcrypt.hash(data.password, 10);
         return this.usersRepo.createUser({ email: data.email, password: hashedPassword });
     }
+
+    /**
+     * Create a user with an already hashed password.
+     * @param data Email and password hashed
+     * @returns The created user
+     */
+    async createUserWithHashedPassword(data: { email: string; passwordHashed: string }) {
+        const existingUser = await this.usersRepo.findByEmail(data.email);
+        if (existingUser) {
+            throw new ConflictException('User with email ' + data.email + ' already exists');
+        }
+        return this.usersRepo.createUser({ email: data.email, password: data.passwordHashed });
+    }
+
+    /**
+     * Update user password
+     * @param email User email
+     * @param newPassword New plain password
+     */
+    async updatePassword(email: string, newPassword: string) {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        return this.usersRepo.updatePassword(email, hashedPassword);
+    }
+
 }

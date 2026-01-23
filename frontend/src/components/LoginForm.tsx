@@ -28,7 +28,6 @@ export default function LoginForm() {
     const validateForm = (): boolean => {
         const newErrors: FormErrors = {};
 
-        // Validations
         const emailError = validateEmail(formData.email);
         const passwordError = validatePassword(formData.password);
 
@@ -45,7 +44,6 @@ export default function LoginForm() {
             ...prev,
             [name]: value
         }));
-        // Clear error for this field when user starts typing
         if (errors[name as keyof FormErrors]) {
             setErrors(prev => ({
                 ...prev,
@@ -110,7 +108,7 @@ export default function LoginForm() {
                 </div>
 
                 {/* Password Field */}
-                <div className="mb-8">
+                <div className="mb-4">
                     <label htmlFor="password" className="block text-sm font-semibold text-gray-300 mb-2">
                         Password
                     </label>
@@ -130,6 +128,13 @@ export default function LoginForm() {
                     {errors.password && (
                         <p className="text-red-500 text-xs mt-2">{errors.password}</p>
                     )}
+                </div>
+
+                {/* Forgot Password Link */}
+                <div className="mb-6 text-right">
+                    <Link to="/forgot-password" className="text-sm text-yellow-400 hover:text-yellow-300">
+                        Forgot your password?
+                    </Link>
                 </div>
 
                 {/* Submit Button */}

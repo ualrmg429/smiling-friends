@@ -25,5 +25,15 @@ export const userService = {
     getCurrentUser: async (): Promise<User> => {
         const { data } = await apiClient.get<User>(`/auth/me`);
         return data;
-    }
+    },
+
+    requestPasswordReset: async (data: { email: string }): Promise<MessageResponse> => {
+    const { data: response } = await apiClient.post<MessageResponse>('/auth/password/reset', data);
+    return response;
+},
+
+    confirmPasswordReset: async (data: { email: string; code: string; newPassword: string }): Promise<MessageResponse> => {
+        const { data: response } = await apiClient.post<MessageResponse>('/auth/password/reset/confirm', data);
+        return response;
+    },
 }

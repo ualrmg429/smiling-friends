@@ -37,6 +37,14 @@ model PendingRegistration {
   createdAt DateTime @default(now())
 }
 
+model PasswordReset {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
 enum Role {
   USER
   ADMIN

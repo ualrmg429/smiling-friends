@@ -26,8 +26,13 @@ export class CharactersController {
   @ApiOperation({ summary: 'Get all characters' })
   @ApiOkResponse({ description: 'All characters returned successfully', type: CharacterResponseDto, isArray: true })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  async getAllCharacters() : Promise<CharacterResponseDto[]> {
+  async getAllCharacters(): Promise<CharacterResponseDto[]> {
     const characters = await this.characterServ.listAllCharacters();
+    
+    if (!characters || characters.length === 0) {
+      return [];
+    }
+    
     return characters.map(char => this.parseToResponseDto(char));
   }
 

@@ -7,6 +7,8 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthService } from './auth.service';
 import { MailModule } from 'src/mail/mail.module';
 import { PendingRegistrationModule } from 'src/pending-registration/pending-registration.module';
+import { PasswordResetModule } from 'src/password-reset/password-reset.module';
+
 
 @Module({
   imports: [
@@ -17,7 +19,8 @@ import { PendingRegistrationModule } from 'src/pending-registration/pending-regi
     }),
     UsersModule,
     MailModule,
-    PendingRegistrationModule
+    PendingRegistrationModule,
+    PasswordResetModule
   ],
   providers: [JwtStrategy, AuthService],
   controllers: [AuthController]

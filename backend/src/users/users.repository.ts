@@ -16,10 +16,27 @@ export class UsersRepository {
     }
 
     /**
+     * Find a user in bd by id
+     * @param id The user id
+     */
+    findById(id: string) : Promise<User | null> {
+       return this.prisma.user.findUnique({ where: { id } });
+    }
+
+    /**
      * Create a user
      * @param data The information to make an user
      */
     async createUser(data: UserData) {
         return this.prisma.user.create({ data: { email: data.email, passwordHashed: data.password } })
+    }
+    
+    async updatePassword(email: string, passwordHashed: string): Promise<User> {
+        return this.prisma.user.update({
+            where: { email },
+            data: {
+                passwordHashed: passwordHashed,
+            },
+        });
     }
 }

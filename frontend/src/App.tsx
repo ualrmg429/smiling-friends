@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage.tsx';
 import SignupPage from './pages/SignupPage.tsx';
 import VerifyEmailPage from './pages/VerifyEmailPage';
 import SimpleLayout from './layouts/SimpleLayout.tsx';
+import ForgotPasswordPage from './pages/ForgotPasswordPage.tsx';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       </Route>
     </Routes>
   );

@@ -9,29 +9,36 @@ export default function CharactersPage() {
     const { data, isLoading, error } = useCharacters(); 
     const { user } = useAuth();
     const isAdmin = (user?.role === "ADMIN");
+    console.log('Is Admin:', isAdmin);
     const [isCreating, setIsCreating] = useState(false);
 
+    console.log('isLoading:', isLoading);
+    console.log('error:', error);
+    console.log('data:', data);
+
     if (isLoading) return <div>Wait</div>;
-    if (error) return <div>Error loading characters</div>;
+    if (error) return <div>Error loading characters: {error.message}</div>;
     if (!data) return <div>No data available</div>;
 
     return (
         <main className="max-w-6xl mx-auto p-8">
             <h1 className="font-heading text-3xl mb-6">Characters</h1>
-            { isAdmin && !isCreating ? 
+          
+            { isAdmin && !isCreating && (
                 <SecondaryButton 
                     label="Create new character"
                     additionalClasses="mb-6"
                     onClick={() => setIsCreating(true)}
                 />
-            : null}
+            )}
+
             
             { isCreating ?
                 <CreateCharacterForm 
                 onSuccess={() => setIsCreating(false)} 
                 onCancel={() => setIsCreating(false)} 
                 />
-            : <CharactersCardList characters={data} />}
+            : <CharactersCardList characters={data} />}     
             
         </main>
     );

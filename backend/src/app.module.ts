@@ -8,10 +8,11 @@ import { StorageService } from './storage/storage.service';
 import { StorageModule } from './storage/storage.module';
 import { MailModule } from './mail/mail.module';
 import { PendingRegistrationModule } from './pending-registration/pending-registration.module';
+import { PasswordResetModule } from './password-reset/password-reset.module';
 
 
 @Module({
-  imports: [CharactersModule, AuthModule, PrismaModule, UsersModule, StorageModule, MailModule, PendingRegistrationModule],
+  imports: [CharactersModule, AuthModule, PrismaModule, UsersModule, StorageModule, MailModule, PendingRegistrationModule, PasswordResetModule],
   controllers: [],
   providers: [PrismaService, StorageService],
 })

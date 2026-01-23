@@ -14,12 +14,8 @@ export class CharactersService {
      * Lists all characters.
      * @returns The list of characters.
      */
-    async listAllCharacters() : Promise<CharacterWithImage[]> {
+    async listAllCharacters() : Promise<CharacterWithImage[] | null> {
         const characters = await this.characterRepo.getAll();
-
-        if(!characters || characters.length === 0) {
-            throw new NotFoundException('There are any characters');
-        }
 
         return characters;
     }

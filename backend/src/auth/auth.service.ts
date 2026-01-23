@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt';
 import { MailService } from 'src/mail/mail.service';
 import { PendingRegistrationService } from 'src/pending-registration/pending-registration.service';
 import * as bcrypt from 'bcrypt';
+import { PasswordResetService } from 'src/password-reset/password-reset.service';
 
 @Injectable()
 export class AuthService {
@@ -13,10 +14,12 @@ export class AuthService {
     private jwtService: JwtService,
     private mailService: MailService,
     private pendingRegistrationService: PendingRegistrationService,
+    private passwordResetService: PasswordResetService,
   ) {}
 
-  async initiateRegistration(email: string, password: string) {
+  async initiateRegistration(email: string, password: string) {  
     const existingUser = await this.usersService.getByEmail(email);
+    
     if (existingUser) {
       throw new BadRequestException('This mail is already registered');
     }
@@ -24,7 +27,7 @@ export class AuthService {
     const pending = await this.pendingRegistrationService.create(email, password);
     await this.mailService.sendVerificationCode(email, pending.code);
 
-    return { message: 'Code send to your mail' };
+    return { message: 'Code sent to your mail' };
   }
 
   async confirmRegistration(email: string, code: string) {
@@ -42,9 +45,9 @@ export class AuthService {
       throw new BadRequestException('Code has expired');
     }
 
-    const user = await this.usersService.createUser({
+    const user = await this.usersService.createUserWithHashedPassword({
       email: pending.email,
-      password: pending.passwordHashed,
+      passwordHashed: pending.passwordHashed,
     });
 
     await this.pendingRegistrationService.delete(email);
@@ -94,5 +97,39 @@ export class AuthService {
         role: user.role,
       }),
     };
+  }
+
+  async requestPasswordReset(email: string) {
+    const user = await this.usersService.getByEmail(email);
+    
+    if (!user) {
+      return { message: 'If the email exists, a code has been sent' };
+    }
+
+    const reset = await this.passwordResetService.create(email);
+    await this.mailService.sendPasswordResetCode(email, reset.code);
+
+    return { message: 'If the email exists, a code has been sent' };
+  }
+
+  async confirmPasswordReset(email: string, code: string, newPassword: string) {
+    const reset = await this.passwordResetService.findByEmail(email);
+
+    if (!reset) {
+      throw new BadRequestException('Invalid or expired code');
+    }
+
+    if (reset.code !== code) {
+      throw new BadRequestException('Invalid code');
+    }
+
+    if (new Date() > reset.expiresAt) {
+      throw new BadRequestException('Code has expired');
+    }
+
+    await this.usersService.updatePassword(email, newPassword);
+    await this.passwordResetService.delete(email);
+
+    return { message: 'Password reset successfully' };
   }
 }

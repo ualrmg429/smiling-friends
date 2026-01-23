@@ -78,3 +78,16 @@ export const useLogout = () => {
         }
     });
 };
+
+export const useRequestPasswordReset = () => {
+    return useMutation({
+        mutationFn: (data: { email: string }) => userService.requestPasswordReset(data),
+    });
+};
+
+export const useConfirmPasswordReset = () => {
+    return useMutation({
+        mutationFn: (data: { email: string; code: string; newPassword: string }) => 
+            userService.confirmPasswordReset(data),
+    });
+};

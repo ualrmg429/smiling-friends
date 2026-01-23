@@ -19,11 +19,14 @@ import { InitiateRegistrationDto } from './dto/initiate-registration.dto';
 import { ConfirmRegistrationDto } from './dto/confirm-registration.dto';
 import { ResendCodeDto } from './dto/resend-code.dto';
 import { MessageResponseDto } from './dto/message-response.dto';
+import { UsersService } from 'src/users/users.service';
+import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
+import { ConfirmPasswordResetDto } from './dto/confirm-password-reset.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private usersService: UsersService) {}
 
   // -----------------------------------------
   // INITIATE REGISTRATION
@@ -94,7 +97,33 @@ export class AuthController {
   @ApiOkResponse({ description: 'User information retrieved successfully', type: UserResponseDto })
   @ApiUnauthorizedResponse({ description: 'Not authenticated or invalid token' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  me(@User() user) {
-    return user;
+  async me(@User() user) {
+    const freshUser = await this.usersService.getById(user.id);
+    return freshUser;
+  }
+
+  // -----------------------------------------
+  // REQUEST PASSWORD RESET
+  // -----------------------------------------
+  @Post('password/reset')
+  @ApiOperation({ summary: 'Request password reset', description: 'Sends a password reset code to the email' })
+  @ApiBody({ type: RequestPasswordResetDto })
+  @ApiOkResponse({ description: 'Code sent if email exists', type: MessageResponseDto })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  requestPasswordReset(@Body() body: RequestPasswordResetDto): Promise<MessageResponseDto> {
+    return this.authService.requestPasswordReset(body.email);
+  }
+
+  // -----------------------------------------
+  // CONFIRM PASSWORD RESET
+  // -----------------------------------------
+  @Post('password/reset/confirm')
+  @ApiOperation({ summary: 'Confirm password reset', description: 'Validates the code and sets the new password' })
+  @ApiBody({ type: ConfirmPasswordResetDto })
+  @ApiOkResponse({ description: 'Password reset successfully', type: MessageResponseDto })
+  @ApiBadRequestResponse({ description: 'Invalid or expired code' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  confirmPasswordReset(@Body() body: ConfirmPasswordResetDto): Promise<MessageResponseDto> {
+    return this.authService.confirmPasswordReset(body.email, body.code, body.newPassword);
   }
 }
