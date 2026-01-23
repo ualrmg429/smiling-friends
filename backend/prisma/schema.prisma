@@ -28,6 +28,15 @@ model Image {
   character Character?
 }
 
+model PendingRegistration {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  passwordHashed  String  
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
 enum Role {
   USER
   ADMIN

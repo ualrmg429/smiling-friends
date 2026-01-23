@@ -6,10 +6,12 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { StorageService } from './storage/storage.service';
 import { StorageModule } from './storage/storage.module';
+import { MailModule } from './mail/mail.module';
+import { PendingRegistrationModule } from './pending-registration/pending-registration.module';
 
 
 @Module({
-  imports: [CharactersModule, AuthModule, PrismaModule, UsersModule, StorageModule],
+  imports: [CharactersModule, AuthModule, PrismaModule, UsersModule, StorageModule, MailModule, PendingRegistrationModule],
   controllers: [],
   providers: [PrismaService, StorageService],
 })

@@ -5,6 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
 import { UsersModule } from 'src/users/users.module';
 import { AuthService } from './auth.service';
+import { MailModule } from 'src/mail/mail.module';
+import { PendingRegistrationModule } from 'src/pending-registration/pending-registration.module';
 
 @Module({
   imports: [
@@ -13,7 +15,9 @@ import { AuthService } from './auth.service';
       secret: process.env.JWT_SECRET || 'miClaveSuperSecreta',
       signOptions: { expiresIn: '1h'}
     }),
-    UsersModule
+    UsersModule,
+    MailModule,
+    PendingRegistrationModule
   ],
   providers: [JwtStrategy, AuthService],
   controllers: [AuthController]
