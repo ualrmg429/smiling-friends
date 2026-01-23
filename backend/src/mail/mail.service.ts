@@ -1,44 +1,37 @@
+// mail/mail.service.ts
 import { Injectable } from '@nestjs/common';
-import * as nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 @Injectable()
 export class MailService {
-  private transporter: nodemailer.Transporter;
+  private resend: Resend;
 
   constructor() {
-    this.transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
-      port: Number(process.env.MAIL_PORT),
-      secure: false,
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS,
-      },
-    });
+    this.resend = new Resend(process.env.RESEND_API_KEY);
   }
 
   async sendVerificationCode(to: string, code: string) {
-    return this.transporter.sendMail({
-      from: '"Tu App" <noreply@tuapp.com>',
+    return this.resend.emails.send({
+      from: 'onboarding@resend.dev', 
       to,
-      subject: 'Código de verificación',
+      subject: 'Verification Code',
       html: `
-        <h1>Verifica tu cuenta</h1>
-        <p>Tu código de verificación es:</p>
+        <h1>Verify your account</h1>
+        <p>Your verification code is:</p>
         <h2 style="letter-spacing: 5px; font-size: 32px;">${code}</h2>
-        <p>Este código expira en 15 minutos.</p>
+        <p>This code expires in 2 hours.</p>
       `,
     });
   }
 
   async sendWelcome(to: string) {
-    return this.transporter.sendMail({
-      from: '"Smiling Characters" <noreply@smilingcharacters.com>',
+    return this.resend.emails.send({
+      from: 'onboarding@resend.dev',
       to,
       subject: 'Welcome!',
       html: `
-        <h1>¡Hola!</h1>
-        <p>Your account was verified correctly.</p>
+        <h1>Welcome to Smiling Friends!</h1>
+        <p>Your account has been verified successfully.</p>
       `,
     });
   }
