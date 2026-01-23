@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { userService } from '../api/services/auth.service';
-import type { User, UserCredentials } from '../types/user';
+import type { UserCredentials, ConfirmRegistration, ResendCode } from '../types/user';
 import { useNavigate } from 'react-router';
 
 export const useAuthQuery = () => {
@@ -9,23 +9,35 @@ export const useAuthQuery = () => {
         queryFn: () => userService.getCurrentUser(),
         enabled: !!localStorage.getItem('token'),
         retry: false,
-        staleTime: 5 * 60 * 1000, 
-        refetchOnMount: true, 
+        staleTime: 5 * 60 * 1000,
+        refetchOnMount: true,
         refetchOnWindowFocus: false,
     });
 };
 
 export const useSignUp = () => {
+    return useMutation({
+        mutationFn: (credentials: UserCredentials) => userService.initiateSignUp(credentials),
+    });
+};
+
+export const useConfirmSignUp = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
     return useMutation({
-        mutationFn: (credentials: UserCredentials) => userService.signUp(credentials),
+        mutationFn: (data: ConfirmRegistration) => userService.confirmSignUp(data),
         onSuccess: (data) => {
             localStorage.setItem('token', data.token);
             queryClient.setQueryData(['currentUser'], data);
-            navigate('/'); 
+            navigate('/');
         },
+    });
+};
+
+export const useResendCode = () => {
+    return useMutation({
+        mutationFn: (data: ResendCode) => userService.resendCode(data),
     });
 };
 
@@ -38,7 +50,7 @@ export const useLogin = () => {
         onSuccess: (data) => {
             localStorage.setItem('token', data.token);
             queryClient.setQueryData(['currentUser'], data);
-            navigate('/'); 
+            navigate('/');
         },
     });
 };
@@ -48,12 +60,13 @@ export const useCurrentUser = () => {
         queryKey: ['currentUser'],
         queryFn: () => userService.getCurrentUser(),
         enabled: !!localStorage.getItem('token'),
-        retry: false, // Do not retry on failure
+        retry: false,
     });
 };
 
 export const useLogout = () => {
     const queryClient = useQueryClient();
+    const navigate = useNavigate();
 
     return useMutation({
         mutationFn: async () => {
@@ -61,6 +74,7 @@ export const useLogout = () => {
         },
         onSuccess: () => {
             queryClient.clear();
+            navigate('/login');
         }
     });
 };

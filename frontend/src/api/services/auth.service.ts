@@ -1,9 +1,19 @@
 import apiClient from "../interceptors";
-import type { User, UserCredentials } from "../../types/user";
+import type { User, UserCredentials, ConfirmRegistration, ResendCode, MessageResponse } from "../../types/user";
 
 export const userService = {
-    signUp: async (credentials : UserCredentials): Promise<User> => {
-        const { data } = await apiClient.post<User>(`/auth/register`, credentials);
+    initiateSignUp: async (credentials: UserCredentials): Promise<MessageResponse> => {
+        const { data } = await apiClient.post<MessageResponse>(`/auth/register`, credentials);
+        return data;
+    },
+
+    confirmSignUp: async (confirmData: ConfirmRegistration): Promise<User> => {
+        const { data } = await apiClient.post<User>(`/auth/register/confirm`, confirmData);
+        return data;
+    },
+
+    resendCode: async (resendData: ResendCode): Promise<MessageResponse> => {
+        const { data } = await apiClient.post<MessageResponse>(`/auth/register/resend`, resendData);
         return data;
     },
 

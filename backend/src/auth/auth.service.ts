@@ -18,28 +18,28 @@ export class AuthService {
   async initiateRegistration(email: string, password: string) {
     const existingUser = await this.usersService.getByEmail(email);
     if (existingUser) {
-      throw new BadRequestException('Este correo ya está registrado');
+      throw new BadRequestException('This mail is already registered');
     }
 
     const pending = await this.pendingRegistrationService.create(email, password);
     await this.mailService.sendVerificationCode(email, pending.code);
 
-    return { message: 'Código enviado a tu correo' };
+    return { message: 'Code send to your mail' };
   }
 
   async confirmRegistration(email: string, code: string) {
     const pending = await this.pendingRegistrationService.findByEmail(email);
 
     if (!pending) {
-      throw new BadRequestException('No hay registro pendiente para este correo');
+      throw new BadRequestException('There is not any registry of this mail');
     }
 
     if (pending.code !== code) {
-      throw new BadRequestException('Código incorrecto');
+      throw new BadRequestException('Incorrect code');
     }
 
     if (new Date() > pending.expiresAt) {
-      throw new BadRequestException('El código ha expirado');
+      throw new BadRequestException('Code has expired');
     }
 
     const user = await this.usersService.createUser({

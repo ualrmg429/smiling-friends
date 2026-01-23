@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import MainButton from './Buttons/MainButton';
 import { validateEmail, validatePassword } from '../utils/validationFunctions';
@@ -27,20 +26,17 @@ export default function SignupForm() {
     });
 
     const [errors, setErrors] = useState<FormErrors>({});
-    const [isLoading] = useState(false);
-    const signUp = useSignUp();
+    const { mutate: signUp, isPending } = useSignUp();
 
     const validateForm = (): boolean => {
         const newErrors: FormErrors = {};
 
-        // Validations
         const emailError = validateEmail(formData.email);
         const passwordError = validatePassword(formData.password);
 
         if (emailError) newErrors.email = emailError;
         if (passwordError) newErrors.password = passwordError;
 
-        // Confirm password validation
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = 'Please confirm your password';
         } else if (formData.password !== formData.confirmPassword) {
@@ -57,7 +53,6 @@ export default function SignupForm() {
             ...prev,
             [name]: value
         }));
-        // Clear error for this field when user starts typing
         if (errors[name as keyof FormErrors]) {
             setErrors(prev => ({
                 ...prev,
@@ -73,14 +68,14 @@ export default function SignupForm() {
             return;
         }
 
-        signUp.mutate(
+        signUp(
             { 
                 email: formData.email, 
                 password: formData.password 
             },
             {
                 onSuccess: () => {
-                    navigate('/');
+                    navigate('/verify-email', { state: { email: formData.email } });
                 },
                 onError: (error: any) => {
                     setErrors({ 
@@ -95,7 +90,6 @@ export default function SignupForm() {
         <section className="w-full max-w-md mx-auto">
             <form onSubmit={handleSubmit} className="bg-slate-900 p-8 rounded-lg shadow-lg border border-slate-700">
                 
-                {/* Email Field */}
                 <div className="mb-6">
                     <label htmlFor="email" className="block text-sm font-semibold text-gray-300 mb-2">
                         Email Address
@@ -121,7 +115,6 @@ export default function SignupForm() {
                     )}
                 </div>
 
-                {/* Password Field */}
                 <div className="mb-6">
                     <label htmlFor="password" className="block text-sm font-semibold text-gray-300 mb-2">
                         Password
@@ -144,7 +137,6 @@ export default function SignupForm() {
                     )}
                 </div>
 
-                {/* Confirm Password Field */}
                 <div className="mb-8">
                     <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-300 mb-2">
                         Confirm Password
@@ -167,16 +159,15 @@ export default function SignupForm() {
                     )}
                 </div>
 
-                {/* Submit Button */}
                 <div className="flex justify-center">
                     <MainButton
                         type="submit"
-                        label={isLoading ? 'Creating Account...' : 'Sign Up'}
+                        label={isPending ? 'Creating Account...' : 'Sign Up'}
                         additionalClasses='w-full justify-center bg-pink-500! hover:bg-pink-600!'
+                        disabled={isPending}
                     />
                 </div>
 
-                {/* Additional Links */}
                 <div className="mt-6 text-center text-sm text-gray-400">
                     <p>
                         Already have an account?{' '}

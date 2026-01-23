@@ -14,12 +14,7 @@ export class UsersService {
      */
     async getByEmail(email: string) {
         const user = await this.usersRepo.findByEmail(email);
-
-        if(user === null) {
-            throw new NotFoundException('User with email' + email + 'not found');
-        }
-
-        return user;
+        return user; 
     }
 
     /**
